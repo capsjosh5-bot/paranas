@@ -1,0 +1,95 @@
+PARANAS LGU SCHOLARSHIP PORTAL — PROFESSIONAL JAVASCRIPT STRUCTURE
+
+public/
+  paranas-seal.png
+
+src/
+  App.jsx                         Application routing only
+  main.jsx                        React bootstrap only
+
+  config/
+    firebase.js                   Firebase initialization from .env.local
+    site.js                       Shared site/status constants
+
+  context/
+    AuthContext.jsx               Authentication + user profile state
+
+  guards/
+    RequireAuth.jsx               Login protection
+    RequireRole.jsx               Student/Admin role protection
+
+  hooks/
+    useAuth.js
+
+  layouts/
+    PublicLayout.jsx              Public website navigation/footer
+    StudentLayout.jsx             Student dashboard sidebar/topbar
+    AdminLayout.jsx               Admin dashboard sidebar/topbar
+
+  components/
+    common/                       Shared professional UI components
+    forms/                        Photo, signature, custom form controls
+    scholarships/                 Scholarship display components
+
+  services/
+    auth.service.js               Login/register/profile data access
+    scholarship.service.js        Scholarship CRUD + publishing
+    application.service.js        Submit/revise/review applications
+    notification.service.js       Realtime applicant notifications
+    content.service.js            Public website content settings
+    audit.service.js              Administrative activity logs
+
+  pages/
+    public/
+      HomePage.jsx
+      ScholarshipsPage.jsx
+      ScholarshipDetailsPage.jsx
+      ProgramPolicyPage.jsx
+      AboutPage.jsx
+
+    auth/
+      LoginPage.jsx
+      RegisterPage.jsx
+
+    student/
+      StudentDashboardPage.jsx
+      StudentScholarshipsPage.jsx
+      ApplyScholarshipPage.jsx
+      MyApplicationsPage.jsx
+      ApplicationDetailsPage.jsx
+      NotificationsPage.jsx
+      ProfilePage.jsx
+
+    admin/
+      AdminDashboardPage.jsx
+      ScholarshipsAdminPage.jsx
+      ScholarshipEditorPage.jsx
+      ApplicantsPage.jsx
+      ReviewQueuePage.jsx
+      ApplicationReviewPage.jsx
+      SiteContentPage.jsx
+      ActivityLogsPage.jsx
+
+  styles/
+    tokens.css                     Color, spacing, generic controls
+    public.css                     Public website + authentication
+    dashboard.css                  Admin/student shells and dashboards
+    forms.css                      Application/review/form UI
+    responsive.css                 Tablet/mobile/print rules
+    index.css                      Stylesheet imports only
+
+  utils/
+    date.js
+    image.js
+    validation.js
+
+Root configuration:
+  .env.local
+  .env.example
+  database.rules.json
+  firebase.json
+  vercel.json
+  vite.config.js
+  package.json
+  README.md
+  RUN-WINDOWS.bat

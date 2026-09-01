@@ -1,0 +1,10 @@
+import { Inbox } from "lucide-react";
+export default function EmptyState({ title, description, action }) {
+    return (<div className="empty-state">
+      <div className="empty-icon"><Inbox size={26}/></div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      {action ? <div>{action}</div> : null}
+    </div>);
+}
+

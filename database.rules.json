@@ -1,0 +1,64 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (auth.uid === $uid && ((!data.exists() && newData.child('role').val() === 'student') || (data.exists() && newData.child('role').val() === data.child('role').val()))))",
+        ".validate": "newData.hasChildren(['uid','fullName','email','role']) && newData.child('uid').val() === $uid && newData.child('fullName').isString() && newData.child('email').isString() && (newData.child('role').val() === 'student' || newData.child('role').val() === 'admin')"
+      }
+    },
+    "scholarships": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
+    "publicScholarships": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
+    "applications": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      "$scholarshipId": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+          ".write": "auth != null && ( root.child('users').child(auth.uid).child('role').val() === 'admin' || ( auth.uid === $uid && ( ( !data.exists() && newData.child('applicantUid').val() === auth.uid && newData.child('scholarshipId').val() === $scholarshipId && newData.child('status').val() === 'pending' && newData.child('adminReview').child('assessment').val() === '' && newData.child('adminReview').child('remarks').val() === '' && !newData.child('adminReview').child('reviewedAt').exists() && newData.child('adminReview').child('reviewedBy').val() === '' && newData.child('signatureAudit').child('signedByUid').val() === auth.uid && root.child('publicScholarships').child($scholarshipId).exists() && data.parent().numChildren() < root.child('scholarships').child($scholarshipId).child('maxApplicants').val() && (root.child('scholarships').child($scholarshipId).child('openAt').val() === 0 || now >= root.child('scholarships').child($scholarshipId).child('openAt').val()) && (root.child('scholarships').child($scholarshipId).child('closeAt').val() === 0 || now <= root.child('scholarships').child($scholarshipId).child('closeAt').val()) && (root.child('scholarships').child($scholarshipId).child('requirePhoto').val() !== true || newData.child('photoDataUrl').val() !== '') && (root.child('scholarships').child($scholarshipId).child('requireSignature').val() !== true || newData.child('signatureDataUrl').val() !== '') ) || ( data.exists() && data.child('status').val() === 'revision_required' && newData.child('status').val() === 'pending' && newData.child('applicantUid').val() === data.child('applicantUid').val() && newData.child('scholarshipId').val() === data.child('scholarshipId').val() && newData.child('scholarshipTitle').val() === data.child('scholarshipTitle').val() && newData.child('scholarshipCode').val() === data.child('scholarshipCode').val() && newData.child('applicantName').val() === data.child('applicantName').val() && newData.child('applicantEmail').val() === data.child('applicantEmail').val() && newData.child('submittedAt').val() === data.child('submittedAt').val() && newData.child('adminReview').child('assessment').val() === data.child('adminReview').child('assessment').val() && newData.child('adminReview').child('remarks').val() === data.child('adminReview').child('remarks').val() && newData.child('adminReview').child('reviewedAt').val() === data.child('adminReview').child('reviewedAt').val() && newData.child('adminReview').child('reviewedBy').val() === data.child('adminReview').child('reviewedBy').val() && newData.child('adminReview').child('reviewedByName').val() === data.child('adminReview').child('reviewedByName').val() ) ) ) )",
+          ".validate": "newData.hasChildren(['applicantUid','scholarshipId','scholarshipTitle','applicantName','status','submittedAt','formData']) && newData.child('applicantUid').val() === $uid && newData.child('scholarshipId').val() === $scholarshipId && (newData.child('status').val() === 'pending' || newData.child('status').val() === 'revision_required' || newData.child('status').val() === 'approved' || newData.child('status').val() === 'rejected')"
+        }
+      }
+    },
+    "userApplicationIndex": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        "$scholarshipId": {
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (auth.uid === $uid && !data.exists() && newData.child('scholarshipId').val() === $scholarshipId))"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        "$notificationId": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+          "read": {
+            ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+          },
+          "readAt": {
+            ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+          }
+        }
+      }
+    },
+    "siteContent": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
+    "auditLogs": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".indexOn": [
+        "createdAt"
+      ]
+    }
+  }
+}
