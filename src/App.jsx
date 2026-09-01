@@ -5,10 +5,11 @@ import RequireRole from "./guards/RequireRole";
 import AdminLayout from "./layouts/AdminLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import StudentLayout from "./layouts/StudentLayout";
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import ActivityLogsPage from "./pages/admin/ActivityLogsPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import ApplicantsPage from "./pages/admin/ApplicantsPage";
 import ApplicationReviewPage from "./pages/admin/ApplicationReviewPage";
+import ReportsPage from "./pages/admin/ReportsPage";
 import ReviewQueuePage from "./pages/admin/ReviewQueuePage";
 import ScholarshipEditorPage from "./pages/admin/ScholarshipEditorPage";
 import ScholarshipsAdminPage from "./pages/admin/ScholarshipsAdminPage";
@@ -28,8 +29,9 @@ import NotificationsPage from "./pages/student/NotificationsPage";
 import ProfilePage from "./pages/student/ProfilePage";
 import StudentDashboardPage from "./pages/student/StudentDashboardPage";
 import StudentScholarshipsPage from "./pages/student/StudentScholarshipsPage";
+
 export default function App() {
-    return <BrowserRouter><AuthProvider><Routes>
+  return <BrowserRouter><AuthProvider><Routes>
     <Route element={<PublicLayout />}>
       <Route path="/" element={<HomePage />}/>
       <Route path="/scholarships" element={<ScholarshipsPage />}/>
@@ -57,8 +59,9 @@ export default function App() {
       <Route path="reviews" element={<ReviewQueuePage />}/>
       <Route path="review/:scholarshipId/:uid" element={<ApplicationReviewPage />}/>
       <Route path="site-content" element={<SiteContentPage />}/>
+      <Route path="reports" element={<ReportsPage />}/>
+      <Route path="activity" element={<ActivityLogsPage />}/>
     </Route>
     <Route path="*" element={<NotFoundPage />}/>
   </Routes></AuthProvider></BrowserRouter>;
 }
-

@@ -1,49 +1,146 @@
-import { BellRing, ClipboardCheck, FilePenLine, Gauge, GraduationCap, History, LogOut, Menu, Settings2, UsersRound, X } from "lucide-react";
+import {
+  BarChart3,
+  ClipboardCheck,
+  ExternalLink,
+  FilePenLine,
+  GraduationCap,
+  History,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Settings2,
+  UsersRound,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { logout } from "../services/auth.service";
+
+const groups = [
+  {
+    label: "OVERVIEW",
+    items: [{ to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard" }],
+  },
+  {
+    label: "PROGRAMS",
+    items: [
+      { to: "/admin/scholarships", icon: GraduationCap, label: "Scholarships" },
+      { to: "/admin/scholarships/new", icon: FilePenLine, label: "Create Scholarship" },
+    ],
+  },
+  {
+    label: "APPLICATIONS",
+    items: [
+      { to: "/admin/applicants", icon: UsersRound, label: "Applicants" },
+      { to: "/admin/reviews", icon: ClipboardCheck, label: "Review Queue" },
+    ],
+  },
+  {
+    label: "CONTENT & REPORTS",
+    items: [
+      { to: "/admin/site-content", icon: Settings2, label: "Website Content" },
+      { to: "/admin/reports", icon: BarChart3, label: "Reports" },
+      { to: "/admin/activity", icon: History, label: "Activity Logs" },
+    ],
+  },
+];
+
 export default function AdminLayout() {
-    const [open, setOpen] = useState(false);
-    const { profile } = useAuth();
-    const navigate = useNavigate();
-    const initials = (profile?.fullName || "Administrator").split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase();
-    async function handleLogout() {
-        await logout();
-        navigate("/");
-    }
-    return (<div className="app-shell admin-shell">
-      <aside className={open ? "sidebar open" : "sidebar"}>
-        <div className="sidebar-brand">
-          <img src="/paranas-seal.png" alt="Paranas seal"/>
-          <div><strong>LGU Scholars</strong><small>Administration</small></div>
-          <button className="sidebar-close" onClick={() => setOpen(false)}><X size={20}/></button>
+  const [open, setOpen] = useState(false);
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const initials = (profile?.fullName || "Scholarship Administrator")
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  async function handleLogout() {
+    await signOut();
+    navigate("/");
+  }
+
+  return (
+    <div className="app-shell admin-shell admin-shell-v3">
+      <aside className={open ? "sidebar admin-sidebar-v3 open" : "sidebar admin-sidebar-v3"}>
+        <div className="sidebar-brand admin-sidebar-brand-v3">
+          <img src="/paranas-seal.png" alt="Municipality of Paranas seal" />
+          <div>
+            <strong>LGU Scholarship</strong>
+            <small>Paranas, Samar</small>
+          </div>
+          <button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Close navigation">
+            <X size={20} />
+          </button>
         </div>
-        <div className="sidebar-label">ADMINISTRATION</div>
-        <nav className="sidebar-nav">
-          <NavLink to="/admin" end><Gauge size={19}/> Dashboard</NavLink>
-          <NavLink to="/admin/scholarships"><GraduationCap size={19}/> Scholarships</NavLink>
-          <NavLink to="/admin/scholarships/new"><FilePenLine size={19}/> Create Scholarship</NavLink>
-          <NavLink to="/admin/applicants"><UsersRound size={19}/> Applicants</NavLink>
-          <NavLink to="/admin/reviews"><ClipboardCheck size={19}/> Review Queue</NavLink>
-          <NavLink to="/admin/site-content"><Settings2 size={19}/> Website Content</NavLink>
-          <NavLink to="/admin/activity"><History size={19}/> Activity Logs</NavLink>
+
+        <nav className="admin-nav-v3" aria-label="Administration navigation">
+          {groups.map((group) => (
+            <div className="admin-nav-group" key={group.label}>
+              <div className="sidebar-label">{group.label}</div>
+              <div className="sidebar-nav">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.end}
+                      onClick={() => setOpen(false)}
+                    >
+                      <Icon size={18} />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
-        <div className="sidebar-notice"><BellRing size={18}/><div><strong>Realtime workflow</strong><span>Decisions are saved to Firebase and shown to students immediately.</span></div></div>
-        <div className="sidebar-footer">
-          <Link to="/" className="back-public">View public website</Link>
-          <button onClick={handleLogout}><LogOut size={18}/> Sign out</button>
+
+        <div className="sidebar-footer admin-sidebar-footer-v3">
+          <Link to="/" target="_blank" rel="noreferrer">
+            <ExternalLink size={17} />
+            <span>View public website</span>
+          </Link>
+          <button onClick={handleLogout}>
+            <LogOut size={17} />
+            <span>Sign out</span>
+          </button>
         </div>
       </aside>
-      <div className="app-main">
-        <header className="app-topbar">
-          <button className="topbar-menu" onClick={() => setOpen(true)}><Menu size={22}/></button>
-          <div className="topbar-context"><span>Administration</span><strong>Scholarship Management System</strong></div>
-          <div className="user-menu-static"><div className="avatar admin-avatar">{initials}</div><div><strong>{profile?.fullName || "Administrator"}</strong><small>System administrator</small></div></div>
-        </header>
-        <main className="workspace"><Outlet /></main>
-      </div>
-      {open ? <button className="sidebar-overlay" onClick={() => setOpen(false)} aria-label="Close navigation"/> : null}
-    </div>);
-}
 
+      <div className="app-main">
+        <header className="app-topbar admin-topbar-v3">
+          <button className="topbar-menu" onClick={() => setOpen(true)} aria-label="Open navigation">
+            <Menu size={22} />
+          </button>
+          <div className="admin-topbar-spacer" />
+          <div className="admin-topbar-actions">
+            <Link className="admin-topbar-public" to="/" target="_blank" rel="noreferrer">
+              <ExternalLink size={16} />
+              Public website
+            </Link>
+            <div className="user-menu-static admin-user-chip">
+              <div className="avatar admin-avatar">{initials}</div>
+              <div>
+                <strong>{profile?.fullName || "Scholarship Administrator"}</strong>
+                <small>System administrator</small>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="workspace admin-workspace-v3">
+          <Outlet />
+        </main>
+      </div>
+
+      {open ? (
+        <button className="sidebar-overlay" onClick={() => setOpen(false)} aria-label="Close navigation" />
+      ) : null}
+    </div>
+  );
+}

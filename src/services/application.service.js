@@ -35,6 +35,12 @@ export async function submitApplication({ scholarship, user, profile, formData, 
             remarks: "",
             reviewedAt: null,
             reviewedBy: "",
+            reviewedByName: "",
+            approvalSignatureDataUrl: "",
+            approvalSignatoryName: "",
+            approvalSignatoryTitle: "",
+            approvalSignatureAuthorized: false,
+            approvalSignedAt: null,
         },
         statusHistory: {
             [String(now)]: {
@@ -118,7 +124,7 @@ export async function getApplicationForAdmin(scholarshipId, uid) {
     const snapshot = await get(ref(db, applicationPath(scholarshipId, uid)));
     return snapshot.exists() ? snapshot.val() : null;
 }
-export async function reviewApplication({ scholarshipId, applicantUid, status, assessment, remarks, adminUid, adminName }) {
+export async function reviewApplication({ scholarshipId, applicantUid, status, assessment, remarks, adminUid, adminName, approvalSignatureDataUrl = "", approvalSignatoryName = "", approvalSignatoryTitle = "", approvalSignatureAuthorized = false }) {
     const path = applicationPath(scholarshipId, applicantUid);
     const snapshot = await get(ref(db, path));
     if (!snapshot.exists())
@@ -141,6 +147,11 @@ export async function reviewApplication({ scholarshipId, applicantUid, status, a
             reviewedAt: now,
             reviewedBy: adminUid,
             reviewedByName: adminName || "Administrator",
+            approvalSignatureDataUrl: status === "approved" ? String(approvalSignatureDataUrl || "") : "",
+            approvalSignatoryName: status === "approved" ? String(approvalSignatoryName || "HON. ELVIRA U. BABALCON").trim() : "",
+            approvalSignatoryTitle: status === "approved" ? String(approvalSignatoryTitle || "Municipal Mayor").trim() : "",
+            approvalSignatureAuthorized: status === "approved" ? approvalSignatureAuthorized === true : false,
+            approvalSignedAt: status === "approved" ? now : null,
         },
         [`${path}/statusHistory/${now}`]: {
             status,

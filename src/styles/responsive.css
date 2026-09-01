@@ -442,3 +442,86 @@
   .reference-footer-brand { grid-column:1/-1; }
   .reference-footer-bottom { width:calc(100% - 32px); flex-direction:column; align-items:flex-start; justify-content:center; padding:12px 0; }
 }
+
+/* Professional About Paranas responsive rules */
+@media (max-width:1100px) {
+  .about-pro-hero-inner { grid-template-columns:1fr 330px; gap:40px; }
+  .about-pro-executives { grid-template-columns:1fr; }
+  .about-pro-leader-card { grid-template-columns:310px 1fr; }
+  .about-pro-council-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .about-pro-place-inner { grid-template-columns:1fr; }
+  .about-pro-place-grid { grid-template-columns:1fr 1fr; }
+  .about-pro-place-card { grid-template-columns:1fr; min-height:0; }
+  .about-pro-place-card>img { height:210px; }
+}
+
+@media (max-width:860px) {
+  .about-pro-section,.about-pro-hero-inner,.about-pro-facts-inner { width:calc(100% - 40px); }
+  .about-pro-hero-inner { min-height:0; grid-template-columns:1fr; padding:58px 0; }
+  .about-pro-identity-card { width:min(100%,430px); min-height:285px; }
+  .about-pro-facts-inner { grid-template-columns:1fr 1fr; }
+  .about-pro-fact { border-bottom:1px solid #e4eae6; }
+  .about-pro-fact:nth-child(2) { border-right:0; }
+  .about-pro-fact:nth-child(3),.about-pro-fact:nth-child(4) { border-bottom:0; }
+  .about-pro-leader-card { grid-template-columns:250px 1fr; }
+  .about-pro-story-grid { grid-template-columns:1fr; }
+  .about-pro-story-card { min-height:0; }
+  .about-pro-history-section { grid-template-columns:1fr; }
+  .about-pro-references { grid-template-columns:1fr; gap:28px; }
+}
+
+@media (max-width:620px) {
+  .about-pro-section,.about-pro-hero-inner,.about-pro-facts-inner { width:calc(100% - 32px); }
+  .about-pro-section { padding:50px 0; }
+  .about-pro-hero-inner { padding:48px 0 42px; gap:28px; }
+  .about-pro-hero-copy h1 { font-size:39px; }
+  .about-pro-hero-copy>p { font-size:14px; }
+  .about-pro-hero-tags { gap:7px; }
+  .about-pro-identity-card { width:100%; padding:26px; min-height:270px; }
+  .about-pro-seal-wrap { width:110px; height:110px; }
+  .about-pro-seal-wrap img { width:96px; height:96px; }
+  .about-pro-facts-inner { width:100%; padding:0 16px; }
+  .about-pro-fact { min-height:96px; padding:18px 12px; }
+  .about-pro-fact:first-child { padding-left:12px; }
+  .about-pro-fact strong { font-size:24px; }
+  .about-pro-section-heading h2 { font-size:30px; }
+  .about-pro-leader-card { grid-template-columns:1fr; }
+  .about-pro-leader-photo { min-height:320px; max-height:370px; }
+  .about-pro-leader-copy { padding:27px; }
+  .about-pro-leader-copy h3 { font-size:25px; }
+  .about-pro-council-heading { align-items:flex-start; flex-direction:column; }
+  .about-pro-council-grid { grid-template-columns:1fr; }
+  .about-pro-council-card { grid-template-columns:78px 1fr; }
+  .about-pro-council-photo { width:78px; height:82px; }
+  .about-pro-map-card { grid-template-columns:1fr; padding:25px; }
+  .about-pro-map-card>img { width:min(100%,250px); justify-self:center; }
+  .about-pro-map-card h2 { font-size:27px; }
+  .about-pro-place-grid { grid-template-columns:1fr; }
+  .about-pro-place-card { grid-template-columns:1fr; }
+  .about-pro-place-card>img { height:190px; }
+  .about-pro-history-card { grid-template-columns:1fr; }
+  .about-pro-reference-links { grid-template-columns:1fr; }
+}
+
+/* Leadership photo revision responsive */
+@media (max-width:1100px) {
+  .about-pro-leadership-media { grid-template-columns:1fr; }
+  .about-pro-photo-feature { grid-template-columns:minmax(320px,.8fr) 1fr; grid-template-rows:1fr; }
+  .about-pro-photo-feature-media { min-height:340px; }
+  .about-pro-photo-feature-media>img { min-height:340px; }
+  .about-pro-photo-feature-copy { align-self:center; }
+  .about-pro-council-grid-directory { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width:700px) {
+  .about-pro-photo-feature { grid-template-columns:1fr; grid-template-rows:auto auto; }
+  .about-pro-photo-feature-media,
+  .about-pro-photo-feature-media>img { min-height:245px; }
+  .about-pro-facebook-card { padding:14px; }
+  .about-pro-facebook-card-heading { padding:6px 4px 14px; }
+  .about-pro-facebook-embed-wrap,
+  .about-pro-facebook-embed-wrap iframe { min-height:360px; }
+  .about-pro-council-grid-directory { grid-template-columns:1fr; }
+  .about-pro-directory-card { grid-template-columns:64px minmax(0,1fr); }
+  .about-pro-council-seal { width:64px; height:72px; }
+}
