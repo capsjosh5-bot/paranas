@@ -1055,8 +1055,8 @@ export default function ApplyScholarshipPage() {
 
               <p className="policy-form-intro">
                 Ako hi Mayor Elvira U. Babalcon ha pagrepresentar han bungto han Paranas,
-                ngan <strong>{form.policyAgreement.studentName || "[Student Name]"}</strong>,
-                komo kag anak ni <strong>{form.policyAgreement.parentGuardianName || "[Parent / Guardian]"}</strong>
+                ngan <strong>{form.policyAgreement.parentGuardianName || "[Parent / Guardian]"}</strong>,
+                komo kag anak ni <strong>{form.policyAgreement.studentName || "[Student Name]"}</strong>
                 nga taga Brgy. <strong>{form.policyAgreement.barangay || "[Barangay]"}</strong>,
                 Paranas, Samar, nauyon ngan magsusunod han mga palisiya nga guin dudumara
                 hine nga programa.
