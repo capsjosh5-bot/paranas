@@ -112,6 +112,7 @@ export default function ApplicationReviewPage() {
 
   const s = app.formData?.student || {};
   const p = app.formData?.parents || {};
+  const policy = app.formData?.policyAgreement || {};
 
   return (
     <>
@@ -121,7 +122,7 @@ export default function ApplicationReviewPage() {
         description={`${app.scholarshipTitle} · Submitted ${formatDateTime(app.submittedAt)}`}
         actions={
           <div className="page-action-group">
-            <button className="button button-secondary" onClick={() => window.print()}><Printer size={17} /> Print official form</button>
+            <button className="button button-secondary" onClick={() => window.print()}><Printer size={17} /> Print Application & Policy</button>
             <Link className="button button-secondary" to="/admin/applicants"><ArrowLeft size={17} /> Applicants</Link>
           </div>
         }
@@ -139,19 +140,19 @@ export default function ApplicationReviewPage() {
 
           <ReviewSection title="A. Student Information">
             <RecordGrid entries={{
-              "Complete name": s.fullName,
+              "Complete Name": s.fullName,
               Birthday: s.birthday,
               Age: s.age,
               Sex: s.sex,
-              Address: s.address,
-              Cellphone: s.phone,
-              "School graduated": s.schoolGraduated,
-              "School year": s.schoolYear,
-              "General average": s.generalAverage,
-              Honors: s.honors,
-              Course: s.course,
-              "Name and place of school": s.schoolNamePlace,
-              "FB / Messenger": s.messenger,
+              "Complete Address": s.address,
+              "Cellphone Number": s.phone,
+              "School Graduated": s.schoolGraduated,
+              "School Year": s.schoolYear,
+              "General Average": s.generalAverage,
+              "Honors Received": s.honors,
+              "Course to Be Taken": s.course,
+              "College / University Name": s.schoolNamePlace,
+              "Facebook Account": s.messenger,
               "4Ps Member": s.fourPs,
             }} />
           </ReviewSection>
@@ -159,15 +160,15 @@ export default function ApplicationReviewPage() {
           <ReviewSection title="B. Parent / Guardian Information">
             <RecordGrid entries={{
               Father: p.fatherName,
-              "Father age": p.fatherAge,
-              "Father occupation": p.fatherOccupation,
+              "Father's Age": p.fatherAge,
+              "Father's Occupation": p.fatherOccupation,
               Mother: p.motherName,
-              "Mother age": p.motherAge,
-              "Mother occupation": p.motherOccupation,
-              "Number of children": p.numberOfChildren,
-              "Gross monthly income": p.grossMonthlyIncome ? `₱${Number(p.grossMonthlyIncome).toLocaleString("en-PH")}` : "",
+              "Mother's Age": p.motherAge,
+              "Mother's Occupation": p.motherOccupation,
+              "Number of Children": p.numberOfChildren,
+              "Gross Monthly Income": p.grossMonthlyIncome ? `₱${Number(p.grossMonthlyIncome).toLocaleString("en-PH")}` : "",
               Guardian: p.guardianName,
-              "Guardian relationship": p.guardianRelationship,
+              "Guardian Relationship": p.guardianRelationship,
             }} />
           </ReviewSection>
 
@@ -175,9 +176,19 @@ export default function ApplicationReviewPage() {
             <ReviewSection title="C. Additional Scholarship Answers"><RecordGrid entries={app.formData.customAnswers} /></ReviewSection>
           ) : null}
 
+          <ReviewSection title="D. LGU Scholars Policy Agreement">
+            <RecordGrid entries={{
+              "Parent / Guardian Name": policy.parentGuardianName,
+              "Student Name": policy.studentName || s.fullName,
+              Barangay: policy.barangay,
+              "Policy Agreement": policy.accepted ? "Accepted" : "Not Accepted",
+            }} />
+          </ReviewSection>
+
           <div className="review-media-grid">
             {app.photoDataUrl ? <section className="panel-card review-media"><span>2×2 PHOTO</span><img className="review-photo" src={app.photoDataUrl} alt="Applicant" /></section> : null}
             {app.signatureDataUrl ? <section className="panel-card review-media"><span>APPLICANT ELECTRONIC SIGNATURE</span><img className="review-signature" src={app.signatureDataUrl} alt="Electronic signature" /><small>Authenticated UID: {app.signatureAudit?.signedByUid}</small><small>Signed: {formatDateTime(app.signatureAudit?.signedAt)}</small></section> : null}
+            {policy.parentSignatureDataUrl ? <section className="panel-card review-media"><span>PARENT / GUARDIAN SIGNATURE</span><img className="review-signature" src={policy.parentSignatureDataUrl} alt="Parent or guardian electronic signature" /><small>Submitted as part of the LGU Scholars Policy Agreement.</small></section> : null}
           </div>
         </div>
 

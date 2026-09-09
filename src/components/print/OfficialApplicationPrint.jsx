@@ -19,6 +19,33 @@ function mark(condition) {
   return condition ? "✓" : "";
 }
 
+function extractBarangay(address) {
+  const text = String(address || "").trim();
+  if (!text) return "";
+
+  const explicit = text.match(/(?:brgy\.?|barangay)\s+([^,;]+)/i);
+  if (explicit?.[1]) return explicit[1].trim();
+
+  const withoutLocation = text
+    .replace(/,?\s*paranas\s*,?\s*samar\s*$/i, "")
+    .replace(/,?\s*samar\s*$/i, "")
+    .trim();
+
+  return withoutLocation;
+}
+
+function inlineMayorName(name) {
+  const cleaned = String(name || DEFAULT_SIGNATORY_NAME)
+    .replace(/^HON\.\s*/i, "")
+    .trim();
+
+  return cleaned
+    .toLowerCase()
+    .replace(/(^|[\s-])([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`)
+    .replace(/\bU\b/, "U.")
+    .replace(/U\.\./g, "U.");
+}
+
 function Field({ label, value, className = "" }) {
   return (
     <div className={`official-form-field ${className}`.trim()}>
@@ -35,6 +62,7 @@ export default function OfficialApplicationPrint({ application }) {
   const p = application.formData?.parents || {};
   const review = application.adminReview || {};
   const customAnswers = application.formData?.customAnswers || {};
+  const policy = application.formData?.policyAgreement || {};
   const customEntries = Object.entries(customAnswers).filter(([, value]) => {
     if (Array.isArray(value)) return value.length > 0;
     return String(value ?? "").trim() !== "";
@@ -45,6 +73,10 @@ export default function OfficialApplicationPrint({ application }) {
   const signatoryName = review.approvalSignatoryName || DEFAULT_SIGNATORY_NAME;
   const signatoryTitle = review.approvalSignatoryTitle || DEFAULT_SIGNATORY_TITLE;
   const approvalDate = review.approvalSignedAt || review.reviewedAt || application.updatedAt;
+  const policyStudentName = policy.studentName || s.fullName || application.applicantName || "";
+  const policyParentName = policy.parentGuardianName || p.guardianName || p.motherName || p.fatherName || "";
+  const policyBarangay = policy.barangay || extractBarangay(s.address);
+  const policyMayorName = inlineMayorName(signatoryName);
 
   return (
     <div className="official-print-only" aria-hidden="true">
@@ -91,8 +123,8 @@ export default function OfficialApplicationPrint({ application }) {
             <Field label="General Average (Grades)" value={s.generalAverage} />
             <Field label="Honors received (if any)" value={s.honors} />
             <Field label="Course to be taken" value={s.course} className="span-2" />
-            <Field label="Name and place of school" value={s.schoolNamePlace} className="span-2" />
-            <Field label="FB / Messenger Account" value={s.messenger} className="span-2" />
+            <Field label="College / University Name" value={s.schoolNamePlace} className="span-2" />
+            <Field label="Facebook Account" value={s.messenger} className="span-2" />
             <Field label="4Ps Member (Yes or No)" value={s.fourPs} className="span-2" />
           </div>
         </section>
@@ -202,6 +234,79 @@ export default function OfficialApplicationPrint({ application }) {
           </div>
         </section>
       ) : null}
+
+      <section className="official-print-sheet official-policy-sheet">
+        <header className="official-policy-header">
+          <img src="/paranas-seal.png" alt="Municipality of Paranas official seal" />
+          <div>
+            <p>Republic of the Philippines</p>
+            <p>Province of Samar</p>
+            <strong>MUNICIPALITY OF PARANAS</strong>
+          </div>
+        </header>
+
+        <div className="official-policy-rule" />
+        <h2>PALISIYA HAN MUNOCIPYO HA PROGRAMA HAN LGU-SCHOLARS</h2>
+
+        <p className="official-policy-intro">
+          Ako hi Mayor {policyMayorName} ha pagrepresentar han bungto han Paranas, ngan{" "}
+          <span className="official-policy-inline">{valueOrLine(policyParentName)}</span>, nga kag-anak ni{" "}
+          <span className="official-policy-inline">{valueOrLine(policyStudentName)}</span> nga taga Brgy.{" "}
+          <span className="official-policy-inline official-policy-inline--short">{valueOrLine(policyBarangay)}</span>, Paranas, Samar,
+          nauyon ngan magsusunod han mga palisiya nga guin dudumara hine nga programa.
+        </p>
+
+        <ol className="official-policy-list">
+          <li>Ine nga programa para gudla han mga tuminongnong ngan rehistrado ha Paranas;</li>
+          <li>Usa la nga anak ha kada pamilya an pwede makatagamtam han programa;</li>
+          <li>An kantidad nga matatagamtaman ha kada semester dire malabaw hin <strong>SINGKO MIL (P 5,000.00) PESOS</strong> ha kada estudyante kada semester ano man nga kurso an iya kuhaon;</li>
+          <li>Kumo kag-anak, responsibilidad ko an pagsuporta han iba pa nga mga panginahanglan han akon estudyante (board &amp; lodging, allowance, miscellaneous, etc.);</li>
+          <li>Kinahanglan pasar an estudyante ha ngatanan nga kinuha nga mga subject; an hulog han grado, uutdon na ngan waray na tsantsa ha sunod nga mga tuig;</li>
+          <li>An mga programa nga ipapatuman han munocipyo para ha kaupayan han barangay kinahanglan tangkod ngan tup-top nga pagtutumanon han estudyante;</li>
+          <li>Magkakamay-ada duha nga ebaluwasyon ha kada semester para kita-on an pagtuman han mga kag-anak ngan estudyante an mga palisiya nga pagbubuhaton ha urhi nga Sabado hit Hulyo, Oktobre, Desyembre ngan Marso.</li>
+        </ol>
+
+        <p className="official-policy-closing">
+          <strong>HA PAGKAMATUOD,</strong> kami nga mga benepisyado in nagpirma ngan kon anuman an mga pagkukulang o pagtalapas hine nga kasarabutan andam kami pag-akseptar han magigin desisyon han nagkakatin hine nga programa.
+        </p>
+
+        <div className="official-policy-signatures">
+          <div className="official-policy-signature-block official-policy-parent-signature">
+            {policy.parentSignatureDataUrl ? (
+              <img src={policy.parentSignatureDataUrl} alt="Parent or guardian electronic signature" />
+            ) : null}
+            <span className="official-policy-signature-space" />
+            <span className="official-policy-signature-line" />
+            <strong>{policyParentName || "Kag-anak"}</strong>
+            <small>Kag-anak / Guardian</small>
+          </div>
+
+          <div className="official-policy-signature-block official-policy-student-signature">
+            {application.signatureDataUrl ? (
+              <img src={application.signatureDataUrl} alt="Student electronic signature" />
+            ) : null}
+            <span className="official-policy-signature-space" />
+            <span className="official-policy-signature-line" />
+            <strong>{policyStudentName || "Estudyante"}</strong>
+            <small>Estudyante</small>
+          </div>
+        </div>
+
+        <div className="official-policy-mayor">
+          {approved && review.approvalSignatureDataUrl ? (
+            <img src={review.approvalSignatureDataUrl} alt="Authorized municipal mayor signature" />
+          ) : (
+            <span className="official-policy-mayor-space" />
+          )}
+          <strong>{signatoryName}</strong>
+          <small>{signatoryTitle}</small>
+        </div>
+
+        <footer className="official-policy-footer">
+          <span>{application.scholarshipTitle || "LGU Scholarship Program"}</span>
+          <span>Application No. {application.scholarshipCode ? `${application.scholarshipCode}-${String(application.applicantUid || "").slice(0, 8).toUpperCase()}` : String(application.applicantUid || "").slice(0, 12).toUpperCase()}</span>
+        </footer>
+      </section>
     </div>
   );
 }

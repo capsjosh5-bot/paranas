@@ -28,6 +28,7 @@ export default function ApplicationDetailsPage() {
 
   const s = app.formData?.student || {};
   const p = app.formData?.parents || {};
+  const policy = app.formData?.policyAgreement || {};
 
   return (
     <>
@@ -38,7 +39,7 @@ export default function ApplicationDetailsPage() {
         actions={
           <div className="page-action-group">
             <button className="button button-secondary" onClick={() => window.print()}>
-              <Printer size={17} /> Print official form
+              <Printer size={17} /> Print Application & Policy
             </button>
             {app.status === "revision_required" ? (
               <Link className="button button-primary" to={`/student/apply/${id}`}>
@@ -82,8 +83,8 @@ export default function ApplicationDetailsPage() {
               "General average": s.generalAverage,
               Honors: s.honors,
               Course: s.course,
-              School: s.schoolNamePlace,
-              "FB / Messenger": s.messenger,
+              "College / University": s.schoolNamePlace,
+              "Facebook Account": s.messenger,
               "4Ps Member": s.fourPs,
             }} />
           </RecordSection>
@@ -106,16 +107,26 @@ export default function ApplicationDetailsPage() {
           {Object.keys(app.formData?.customAnswers || {}).length ? (
             <RecordSection title="Additional Answers"><RecordGrid entries={app.formData.customAnswers} /></RecordSection>
           ) : null}
+
+          <RecordSection title="LGU Scholars Policy Agreement">
+            <RecordGrid entries={{
+              "Parent / Guardian Name": policy.parentGuardianName,
+              "Student Name": policy.studentName || s.fullName,
+              Barangay: policy.barangay,
+              "Agreement Status": policy.accepted ? "Accepted" : "Not Accepted",
+            }} />
+          </RecordSection>
         </div>
 
         <aside className="application-detail-side">
           {app.photoDataUrl ? <div className="panel-card identity-card"><span>2×2 APPLICANT PHOTO</span><img src={app.photoDataUrl} alt="Applicant" /></div> : null}
-          {app.signatureDataUrl ? <div className="panel-card signature-record"><span>ELECTRONIC SIGNATURE</span><img src={app.signatureDataUrl} alt="Electronic signature" /><small>Signed {formatDateTime(app.signatureAudit?.signedAt)}</small></div> : null}
+          {app.signatureDataUrl ? <div className="panel-card signature-record"><span>STUDENT ELECTRONIC SIGNATURE</span><img src={app.signatureDataUrl} alt="Student electronic signature" /><small>Signed {formatDateTime(app.signatureAudit?.signedAt)}</small></div> : null}
+          {policy.parentSignatureDataUrl ? <div className="panel-card signature-record"><span>PARENT / GUARDIAN SIGNATURE</span><img src={policy.parentSignatureDataUrl} alt="Parent or guardian electronic signature" /><small>Submitted with the LGU Scholars Policy Agreement.</small></div> : null}
           {app.status === "approved" ? (
             <div className="panel-card official-approval-status-card">
               <span>OFFICIAL APPROVAL</span>
               <strong>Approved by the Municipal Government</strong>
-              <p>The official print form includes the assessment, recommendation, approval date, and authorized mayor approval signature on record.</p>
+              <p>The print package includes your official application, review/approval details, and the LGU Scholars policy page.</p>
             </div>
           ) : null}
           <div className="panel-card timeline-card"><span>STATUS HISTORY</span>{Object.values(app.statusHistory || {}).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).map((item) => <div className="timeline-item" key={item.timestamp}><Clock3 size={16} /><div><strong>{item.label}</strong><small>{formatDateTime(item.timestamp)}</small></div></div>)}</div>
