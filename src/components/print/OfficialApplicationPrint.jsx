@@ -250,8 +250,8 @@ export default function OfficialApplicationPrint({ application }) {
 
         <p className="official-policy-intro">
           Ako hi Mayor {policyMayorName} ha pagrepresentar han bungto han Paranas, ngan{" "}
-          <span className="official-policy-inline">{valueOrLine(policyParentName)}</span>, nga kag-anak ni{" "}
-          <span className="official-policy-inline">{valueOrLine(policyStudentName)}</span> nga taga Brgy.{" "}
+          <span className="official-policy-inline">{valueOrLine(policyStudentName)}</span>, komo kag anak ni{" "}
+          <span className="official-policy-inline">{valueOrLine(policyParentName)}</span> nga taga Brgy.{" "}
           <span className="official-policy-inline official-policy-inline--short">{valueOrLine(policyBarangay)}</span>, Paranas, Samar,
           nauyon ngan magsusunod han mga palisiya nga guin dudumara hine nga programa.
         </p>
