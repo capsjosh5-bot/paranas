@@ -1852,3 +1852,43 @@
     text-align: center;
   }
 }
+
+/* Live report data state */
+.admin-report-source-alert {
+  display: flex;
+  gap: .35rem;
+  flex-direction: column;
+  margin: 0 0 1rem;
+  padding: .75rem .9rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8e4;
+  background: #f8faf9;
+  font-size: .72rem;
+  line-height: 1.45;
+}
+.admin-report-source-alert strong { color: #20352a; }
+.admin-report-source-alert span { color: #627268; }
+.admin-report-source-alert.warning { border-color: #ead9a8; background: #fffaf0; }
+.admin-report-source-alert.error { border-color: #ecc9c9; background: #fff6f6; }
+.admin-report-source-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin: .75rem 0 0;
+}
+.admin-report-source-summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .55rem;
+  border: 1px solid #e3e9e5;
+  border-radius: 999px;
+  background: #fbfcfb;
+  color: #718078;
+  font-size: .6rem;
+}
+.admin-report-source-summary strong { color: #244a35; font-size: .66rem; }
+
+@media print {
+  body.admin-report-context .admin-report-source-alert { display: none !important; }
+}
