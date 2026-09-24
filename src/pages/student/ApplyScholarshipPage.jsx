@@ -633,7 +633,7 @@ export default function ApplyScholarshipPage() {
               description="Provide your most recent school information, intended course, and college or university."
             >
               <div className="form-grid application-grid">
-                <Field label="School Graduated">
+                <Field label="Last School Attended">
                   <input
                     value={form.student.schoolGraduated}
                     onChange={(event) =>
@@ -689,7 +689,7 @@ export default function ApplyScholarshipPage() {
                   />
                 </Field>
 
-                <Field label="College / University Name" required full>
+                <Field label="Current School Attended" required full>
                   <input
                     placeholder="Enter college or university name"
                     value={form.student.schoolNamePlace}
