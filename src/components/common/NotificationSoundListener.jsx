@@ -1,32 +1,95 @@
 import { useEffect, useRef } from "react";
-import { useAuth } from "../../hooks/useAuth";
-import { subscribeNotifications } from "../../services/notification.service";
+import { database } from "../../firebase";
+import { ref, onChildAdded } from "firebase/database";
 
-export default function NotificationSoundListener() {
-  const { profile } = useAuth();
-  const previous = useRef(new Set());
+export default function NotificationSoundListener({ uid }) {
+  const audioRef = useRef(null);
+  const unlocked = useRef(false);
 
   useEffect(() => {
-    if (!profile?.uid) return;
 
-    const audio = new Audio("/notification.mp3");
-    audio.volume = 1.0;
+    // Load sound
+    audioRef.current = new Audio("/notification.mp3");
+    audioRef.current.volume = 1.0;
 
-    return subscribeNotifications(profile.uid, (items) => {
-      items.forEach((item) => {
-        if (!previous.current.has(item.id)) {
-          previous.current.add(item.id);
-          if (item.type === "NEW_SCHOLARSHIP") {
-            audio.currentTime = 0;
-            audio.play().catch(() => {});
-            if (Notification.permission === "granted") {
-              new Notification(item.title, { body: item.message });
-            }
-          }
+    // Unlock browser audio
+    const unlockAudio = () => {
+      if (!unlocked.current) {
+        audioRef.current.play()
+          .then(() => {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            unlocked.current = true;
+            console.log("Audio unlocked");
+          })
+          .catch(err => {
+            console.log("Audio unlock failed", err);
+          });
+      }
+    };
+
+    document.addEventListener("click", unlockAudio);
+    document.addEventListener("keydown", unlockAudio);
+
+    return () => {
+      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener("keydown", unlockAudio);
+    };
+
+  }, []);
+
+
+  useEffect(() => {
+
+    if (!uid) return;
+
+
+    const notificationRef = ref(
+      database,
+      `notifications/${uid}`
+    );
+
+
+    const unsubscribe = onChildAdded(
+      notificationRef,
+      (snapshot) => {
+
+        const data = snapshot.val();
+
+        console.log(
+          "NEW NOTIFICATION:",
+          data
+        );
+
+
+        if (audioRef.current) {
+
+          audioRef.current.currentTime = 0;
+
+          audioRef.current.play()
+            .then(() => {
+              console.log(
+                "Notification sound played"
+              );
+            })
+            .catch(err => {
+              console.error(
+                "Sound blocked:",
+                err
+              );
+            });
+
         }
-      });
-    });
-  }, [profile?.uid]);
+
+
+      }
+    );
+
+
+    return () => unsubscribe();
+
+  }, [uid]);
+
 
   return null;
 }
