@@ -1,6 +1,7 @@
 import { get, push, ref, update } from "firebase/database";
 import { db } from "../config/firebase";
 import { writeAuditLog } from "./audit.service";
+import { createScholarshipNotifications } from "./notification.service";
 function cleanScholarship(input) {
     return {
         title: String(input.title || "").trim(),
@@ -51,6 +52,9 @@ export async function createScholarship(input, adminUid) {
     };
     updates[`publicScholarships/${id}`] = scholarship.status === "published" ? scholarship : null;
     await update(ref(db), updates);
+    if (scholarship.status === "published") {
+        await createScholarshipNotifications(scholarship);
+    }
     void writeAuditLog({ actorUid: adminUid, actorName: "Administrator", action: "CREATE_SCHOLARSHIP", entityType: "scholarship", entityId: id, detail: scholarship.title }).catch(console.error);
     return scholarship;
 }
@@ -71,6 +75,9 @@ export async function updateScholarship(id, input, adminUid) {
         [`publicScholarships/${id}`]: scholarship.status === "published" ? scholarship : null,
     };
     await update(ref(db), updates);
+    if (scholarship.status === "published") {
+        await createScholarshipNotifications(scholarship);
+    }
     void writeAuditLog({ actorUid: adminUid, actorName: "Administrator", action: "UPDATE_SCHOLARSHIP", entityType: "scholarship", entityId: id, detail: scholarship.title }).catch(console.error);
     return scholarship;
 }
