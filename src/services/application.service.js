@@ -161,7 +161,15 @@ export async function reviewApplication({ scholarshipId, applicantUid, status, a
         },
         [`notifications/${applicantUid}/${notificationKey}`]: {
             id: notificationKey,
-            type: "application_status",
+            type: status === "revision_required"
+                ? "APPLICATION_REVISION"
+                : status === "rejected"
+                    ? "APPLICATION_DECLINED"
+                    : status === "approved"
+                        ? "APPLICATION_APPROVED"
+                        : "APPLICATION_STATUS",
+            applicationId: `${scholarshipId}/${applicantUid}`,
+            adminComment: String(remarks || "").trim(),
             title: `Application ${statusLabels[status] || status}`,
             message: status === "revision_required"
                 ? remarks || "Your application requires revisions. Please review the administrator remarks and resubmit."

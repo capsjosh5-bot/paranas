@@ -1,6 +1,6 @@
 import { ArrowLeft, CheckCircle2, Clock3, ImagePlus, Printer, Save, Trash2, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/common/Loader";
 import PageHeader from "../../components/common/PageHeader";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -16,6 +16,7 @@ const DEFAULT_MAYOR_TITLE = "Municipal Mayor";
 
 export default function ApplicationReviewPage() {
   const { scholarshipId, uid } = useParams();
+  const navigate = useNavigate();
   const { user, profile } = useAuth();
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -99,7 +100,11 @@ export default function ApplicationReviewPage() {
       });
 
       setMessage("Application decision saved, official approval data recorded, and the student was notified.");
-      hydrate(await getApplicationForAdmin(scholarshipId, uid));
+
+      // Return admin to the Pending Review Queue after successful notification
+      setTimeout(() => {
+        navigate("/admin/reviews");
+      }, 1000);
     } catch (err) {
       setError(humanizeFirebaseError(err));
     } finally {

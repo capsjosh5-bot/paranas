@@ -1,20 +1,15 @@
-import { Bell, CheckCheck, ArrowRight, GraduationCap, FileText, Trophy, Megaphone, Info } from "lucide-react";
+import { Bell, CheckCheck, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import PageHeader from "../../components/common/PageHeader";
 import EmptyState from "../../components/common/EmptyState";
 import { useAuth } from "../../hooks/useAuth";
-
 import {
     markAllNotificationsRead,
     markNotificationRead,
     subscribeNotifications
 } from "../../services/notification.service";
-
 import { formatDateTime } from "../../utils/date";
-
-import "../../styles/notifications.css";
 
 export default function NotificationsPage() {
     const { user } = useAuth();
@@ -37,19 +32,6 @@ export default function NotificationsPage() {
         await markAllNotificationsRead(user.uid, items);
     }
 
-    function getIcon(index) {
-        const icons = [
-            GraduationCap,
-            FileText,
-            Trophy,
-            Megaphone,
-            Info
-        ];
-
-        const Icon = icons[index % icons.length];
-        return <Icon size={24} />;
-    }
-
     return (
         <>
             <PageHeader
@@ -58,7 +40,10 @@ export default function NotificationsPage() {
                 description="Stay updated with new scholarship opportunities and important application announcements."
                 actions={
                     items.some((n) => !n.read) && (
-                        <button className="premium-read-button" onClick={readAll}>
+                        <button
+                            className="button button-secondary"
+                            onClick={readAll}
+                        >
                             <CheckCheck size={17}/>
                             Mark all as read
                         </button>
@@ -67,51 +52,65 @@ export default function NotificationsPage() {
             />
 
             {items.length ? (
-                <section className="notification-modern-wrapper">
+                <div className="notifications-panel professional-notifications">
 
-                    <div className="notification-modern-card">
+                    {items.map((note) => (
+                        <button
+                            key={note.id}
+                            onClick={() => openNotification(note)}
+                            className={
+                                note.read
+                                ? "notification-card professional-card"
+                                : "notification-card professional-card unread"
+                            }
+                        >
 
-                        {items.map((note, index) => (
-                            <button
-                                key={note.id}
-                                onClick={() => openNotification(note)}
-                                className={`modern-notification-item ${!note.read ? "new" : ""}`}
-                            >
+                            <div className="notification-icon premium-icon">
+                                <Bell size={22}/>
+                            </div>
 
-                                <div className="modern-notification-icon">
-                                    {getIcon(index)}
-                                    {!note.read && <span />}
+
+                            <div className="notification-content">
+
+                                <div className="notification-title-row">
+                                    <strong>
+                                        {note.title}
+                                    </strong>
+
+                                    <span>
+                                        {formatDateTime(note.createdAt)}
+                                    </span>
                                 </div>
 
-                                <div className="modern-notification-body">
 
-                                    <div className="modern-title-row">
-                                        <h3>{note.title}</h3>
-                                        <time>{formatDateTime(note.createdAt)}</time>
-                                    </div>
+                                <p>
+                                    {note.message}
+                                </p>
 
-                                    <p>{note.message}</p>
 
-                                    <div className="modern-action">
+                                <div className="notification-footer">
+
+                                    <small>
                                         {note.scholarshipId
                                             ? "Open scholarship details"
                                             : note.read
                                             ? "Read"
                                             : "Click to mark as read"}
+                                    </small>
 
-                                        {note.scholarshipId && (
-                                            <ArrowRight size={17}/>
-                                        )}
-                                    </div>
+
+                                    {note.scholarshipId && (
+                                        <ArrowRight size={17}/>
+                                    )}
 
                                 </div>
 
-                            </button>
-                        ))}
+                            </div>
 
-                    </div>
+                        </button>
+                    ))}
 
-                </section>
+                </div>
             ) : (
                 <EmptyState
                     title="No notifications"
