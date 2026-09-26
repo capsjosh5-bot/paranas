@@ -1,17 +1,123 @@
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, CheckCheck, ArrowRight, GraduationCap, FileText, Trophy, Megaphone, Info } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import PageHeader from "../../components/common/PageHeader";
 import EmptyState from "../../components/common/EmptyState";
 import { useAuth } from "../../hooks/useAuth";
-import { markAllNotificationsRead, markNotificationRead, subscribeNotifications } from "../../services/notification.service";
+
+import {
+    markAllNotificationsRead,
+    markNotificationRead,
+    subscribeNotifications
+} from "../../services/notification.service";
+
 import { formatDateTime } from "../../utils/date";
+
+import "../../styles/notifications.css";
+
 export default function NotificationsPage() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [items, setItems] = useState([]);
-    useEffect(() => subscribeNotifications(user.uid, setItems), [user.uid]);
-    async function read(id) { await markNotificationRead(user.uid, id); }
-    async function readAll() { await markAllNotificationsRead(user.uid, items); }
-    return <><PageHeader eyebrow="STUDENT PORTAL" title="Notifications" description="Administrative decisions and revision instructions for your scholarship applications." actions={items.some((n) => !n.read) ? <button className="button button-secondary" onClick={readAll}><CheckCheck size={17}/> Mark all as read</button> : null}/>
- {items.length ? <div className="notifications-panel">{items.map((note) => <button key={note.id} onClick={() => read(note.id)} className={note.read ? "notification-card" : "notification-card unread"}><div className="notification-icon"><Bell size={19}/></div><div><div className="notification-title-row"><strong>{note.title}</strong><span>{formatDateTime(note.createdAt)}</span></div><p>{note.message}</p>{!note.read ? <small>Click to mark as read</small> : <small>Read</small>}</div></button>)}</div> : <EmptyState title="No notifications" description="Your scholarship status updates and revision notices will appear here."/>}</>;
-}
 
+    useEffect(() => {
+        return subscribeNotifications(user.uid, setItems);
+    }, [user.uid]);
+
+    async function openNotification(note) {
+        await markNotificationRead(user.uid, note.id);
+
+        if (note.scholarshipId) {
+            navigate(`/scholarships/${note.scholarshipId}`);
+        }
+    }
+
+    async function readAll() {
+        await markAllNotificationsRead(user.uid, items);
+    }
+
+    function getIcon(index) {
+        const icons = [
+            GraduationCap,
+            FileText,
+            Trophy,
+            Megaphone,
+            Info
+        ];
+
+        const Icon = icons[index % icons.length];
+        return <Icon size={24} />;
+    }
+
+    return (
+        <>
+            <PageHeader
+                eyebrow="STUDENT PORTAL"
+                title="Notifications"
+                description="Stay updated with new scholarship opportunities and important application announcements."
+                actions={
+                    items.some((n) => !n.read) && (
+                        <button className="premium-read-button" onClick={readAll}>
+                            <CheckCheck size={17}/>
+                            Mark all as read
+                        </button>
+                    )
+                }
+            />
+
+            {items.length ? (
+                <section className="notification-modern-wrapper">
+
+                    <div className="notification-modern-card">
+
+                        {items.map((note, index) => (
+                            <button
+                                key={note.id}
+                                onClick={() => openNotification(note)}
+                                className={`modern-notification-item ${!note.read ? "new" : ""}`}
+                            >
+
+                                <div className="modern-notification-icon">
+                                    {getIcon(index)}
+                                    {!note.read && <span />}
+                                </div>
+
+                                <div className="modern-notification-body">
+
+                                    <div className="modern-title-row">
+                                        <h3>{note.title}</h3>
+                                        <time>{formatDateTime(note.createdAt)}</time>
+                                    </div>
+
+                                    <p>{note.message}</p>
+
+                                    <div className="modern-action">
+                                        {note.scholarshipId
+                                            ? "Open scholarship details"
+                                            : note.read
+                                            ? "Read"
+                                            : "Click to mark as read"}
+
+                                        {note.scholarshipId && (
+                                            <ArrowRight size={17}/>
+                                        )}
+                                    </div>
+
+                                </div>
+
+                            </button>
+                        ))}
+
+                    </div>
+
+                </section>
+            ) : (
+                <EmptyState
+                    title="No notifications"
+                    description="Scholarship announcements and application updates will appear here."
+                />
+            )}
+        </>
+    );
+}

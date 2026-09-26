@@ -19,9 +19,9 @@ export default function StudentLayout() {
         navigate("/");
     }
     const initials = (profile?.fullName || "Student").split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase();
-    return (<div className="app-shell">
+    return (<div className="app-shell lgu-professional-shell">
       <aside className={open ? "sidebar open" : "sidebar"}>
-        <div className="sidebar-brand">
+        <div className="sidebar-brand lgu-brand">
           <img src="/paranas-seal.png" alt="Paranas seal"/>
           <div><strong>LGU Scholars</strong><small>Student Portal</small></div>
           <button className="sidebar-close" onClick={() => setOpen(false)}><X size={20}/></button>
@@ -40,7 +40,7 @@ export default function StudentLayout() {
         </div>
       </aside>
       <div className="app-main">
-        <header className="app-topbar">
+        <header className="app-topbar lgu-topbar">
           <button className="topbar-menu" onClick={() => setOpen(true)}><Menu size={22}/></button>
           <div className="topbar-context"><span>Student Portal</span><strong>Scholarship Application Workspace</strong></div>
           <div className="topbar-user-group"><Link to="/student/notifications" className="topbar-notification" aria-label="Notifications"><Bell size={19}/>{unread > 0 ? <span>{unread > 9 ? "9+" : unread}</span> : null}</Link><div className="user-menu-static"><div className="avatar">{initials}</div><div><strong>{profile?.fullName || "Student"}</strong><small>{profile?.email || ""}</small></div></div></div>

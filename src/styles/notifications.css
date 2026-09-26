@@ -1,0 +1,130 @@
+.notification-modern-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.notification-tabs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.notification-tabs button {
+    border: 1px solid #dfe8e4;
+    background: white;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    color: #48605b;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.notification-tabs button.active {
+    background:#176b62;
+    color:white;
+    border-color:#176b62;
+}
+
+.premium-read-button {
+    background:#176b62;
+    color:white;
+    border:none;
+    border-radius:999px;
+    padding:12px 20px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    cursor:pointer;
+}
+
+.notification-modern-card {
+    background:white;
+    border:1px solid #e4ece8;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(20,60,50,.08);
+}
+
+.modern-notification-item {
+    width:100%;
+    display:flex;
+    gap:22px;
+    padding:28px;
+    background:white;
+    border:none;
+    border-bottom:1px solid #edf2ef;
+    text-align:left;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.modern-notification-item:hover {
+    background:#f8fcfa;
+}
+
+.modern-notification-item.new {
+    border-left:4px solid #1b8b73;
+}
+
+.modern-notification-icon {
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    background:#e8f5ef;
+    color:#176b62;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    flex:none;
+}
+
+.modern-notification-icon span {
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:#ef4444;
+    border-radius:50%;
+    top:5px;
+    right:5px;
+}
+
+.modern-notification-body {
+    flex:1;
+}
+
+.modern-title-row {
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.modern-title-row h3 {
+    margin:0;
+    font-size:18px;
+    color:#102a43;
+}
+
+.modern-title-row time {
+    color:#78909c;
+    font-size:14px;
+}
+
+.modern-notification-body p {
+    color:#536b78;
+    margin:10px 0;
+    font-size:15px;
+}
+
+.modern-action {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#176b62;
+    font-size:14px;
+    font-weight:600;
+}

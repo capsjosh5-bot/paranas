@@ -1,0 +1,61 @@
+/* LGU Scholars Professional Dashboard UI */
+
+.student-dashboard-shell {
+    min-height:100vh;
+}
+
+.dashboard-main-content {
+    background:#f7faf8;
+}
+
+.lgu-card {
+    border-radius:24px;
+    background:white;
+    border:1px solid #e7eeea;
+    box-shadow:0 18px 45px rgba(18,58,42,.08);
+}
+
+.lgu-stat-card {
+    padding:28px;
+    border-radius:22px;
+    background:white;
+    border:1px solid #e8efeb;
+    transition:.25s;
+}
+
+.lgu-stat-card:hover {
+    transform:translateY(-4px);
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.lgu-sidebar {
+    background:#08271b;
+    color:white;
+}
+
+.lgu-sidebar .active {
+    background:#285f48;
+    border-left:4px solid #d7aa42;
+    border-radius:16px;
+}
+
+.lgu-sidebar a {
+    transition:.2s;
+}
+
+.lgu-sidebar a:hover {
+    background:rgba(255,255,255,.08);
+    border-radius:16px;
+}
+
+.dashboard-welcome {
+    border-radius:28px;
+    background:linear-gradient(110deg,#ffffff,#f1f8f4);
+    padding:40px;
+}
+
+.dashboard-section-title {
+    font-size:26px;
+    font-weight:800;
+    color:#102a22;
+}
